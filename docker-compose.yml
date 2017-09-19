@@ -1,0 +1,13 @@
+version: '3'
+services:
+  aeron_ping:
+    image: "aeron_ping"
+    shm_size: 512M
+    expose:
+      - 40124
+
+  aeron_pong:
+    image: "aeron_pong"
+    shm_size: 512M
+    expose:
+      - 40123

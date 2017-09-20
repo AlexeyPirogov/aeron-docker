@@ -1,13 +1,27 @@
 version: '3'
 services:
   aeron_ping:
-    image: "aeron_ping"
+    image: "centos_aeron_base:latest"
+    command: >
+      bash -c "java -cp samples.jar io.aeron.samples.LowLatencyMediaDriver &
+               java -cp samples.jar \
+               -XX:+UnlockDiagnosticVMOptions \
+               -XX:GuaranteedSafepointInterval=300000 \
+               -Dagrona.disable.bounds.checks=true \
+               -Daeron.sample.ping.channel=aeron:udp?endpoint=aeron_pong:40124 \
+               -Daeron.sample.pong.channel=aeron:udp?endpoint=aeron_ping:40123 \
+               io.aeron.samples.Ping"
     shm_size: 512M
-    expose:
-      - 40124
 
   aeron_pong:
-    image: "aeron_pong"
+    image: "centos_aeron_base:latest"
+    command: >
+      bash -c "java -cp samples.jar io.aeron.samples.LowLatencyMediaDriver &
+               java -cp samples.jar \
+               -XX:+UnlockDiagnosticVMOptions \
+               -XX:GuaranteedSafepointInterval=300000 \
+               -Dagrona.disable.bounds.checks=true \
+               -Daeron.sample.ping.channel=aeron:udp?endpoint=aeron_pong:40124 \
+               -Daeron.sample.pong.channel=aeron:udp?endpoint=aeron_ping:40123 \
+               io.aeron.samples.Pong"
     shm_size: 512M
-    expose:
-      - 40123
